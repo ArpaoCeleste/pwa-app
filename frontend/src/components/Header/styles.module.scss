@@ -1,0 +1,43 @@
+.navBar {
+  background-color: #f0fcff; // cor de fundo clara semelhante à imagem
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.link {
+  display: flex;
+  gap: 10px;
+
+  a {
+    border: 1px solid #333;
+    padding: 4px 8px;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background-color: #e6e6e6;
+    }
+  }
+}
+
+.counts{
+  color: red;
+}

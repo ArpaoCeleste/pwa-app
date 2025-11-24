@@ -1,0 +1,13 @@
+.image {
+  width: 80px;      // ou o tamanho desejado
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;   // centraliza horizontalmente
+}
+
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}

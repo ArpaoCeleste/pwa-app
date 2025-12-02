@@ -18,8 +18,8 @@ function AuthRouter() {
       return res.status(400).send({ auth: false, message: 'Invalid role or scope' });
     }
 
-    //Authorize - Bearer fjbdfbdsjkfndskf
-    //credentials: include
+    
+    
     Users.create(body)
       .then((result) => {
         const userObj = result.user.toObject();
@@ -42,12 +42,12 @@ function AuthRouter() {
         return Users.createToken(user);
       })
       .then((response) => {
-        // The httpOnly: true setting means that the cookie can’t be read using JavaScript but can still be sent back to the server in HTTP requests
+      
         res.cookie("token", response.token, {
           httpOnly: false,
-          secure: false,              // em dev local HTTP
-          sameSite: "lax",            // permite envio cross-origin para localhost:5173
-          path: "/",                  // cookie disponível em todas as rotas
+          secure: false,              
+          sameSite: "lax",            
+          path: "/",                 
         });
         res.status(200);
         res.send(response);

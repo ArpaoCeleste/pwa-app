@@ -20,6 +20,7 @@
     "multer": "^2.0.2",
     "nodemon": "^2.0.22",
     "react-qr-code": "^2.0.18",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "swagger-ui-express": "^4.6.3"
   }
 }

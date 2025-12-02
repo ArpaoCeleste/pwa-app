@@ -23,7 +23,7 @@ const customFrontendUrl = process.env.FRONTEND_URL || '';
 
 const allowedOrigins = [
   customFrontendUrl,
-  'https://pwa-all-app.vercel.app',
+  'https://pwa-appnerpa.vercel.app/',
 ].filter(Boolean);
 
 const isAllowedOrigin = (origin) =>

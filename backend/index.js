@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const path = require("path");
 const socketIo = require("socket.io");
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./doc/api.json");
 const cors = require("cors");
 
 const config = require("./config");

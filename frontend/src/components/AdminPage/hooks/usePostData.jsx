@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { buildApiUrl } from "../../../config";
 
 export const usePostData = (url = "") => {
   const [isError, setError] = useState(false);
@@ -8,9 +9,10 @@ export const usePostData = (url = "") => {
   // 🔹 Função adicional no mesmo estilo da imagem
   const addData = (data) => {
     setLoading(true);
-    fetch(`/api/${url}`, {
+    fetch(buildApiUrl(`/api/${url}`), {
       headers: {
         "Content-Type": "application/json",
+        credentials: "include",
       },
       method: "POST",
       body: JSON.stringify(data),

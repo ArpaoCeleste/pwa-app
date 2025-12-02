@@ -11,10 +11,11 @@ const LoginForm = ({ title, role, data }) => {
   const onSubmit = (data) => login(data);
 
   const login = (data) => {
-    fetch("/api/auth/login", {
+    fetch(buildApiUrl("/api/auth/login"), {
       headers: { "Content-Type": "application/json" },
       method: "POST",
       body: JSON.stringify(data),
+      credentials: "include",
     })
       .then((r) => r.json())
       .then((response) => {

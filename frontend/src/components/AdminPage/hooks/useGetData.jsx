@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { buildApiUrl } from "../../../config";
 
 export const useGetData = (url = "", pageSize = 10, current = 1) => {
   const [isError, setError] = useState(false);
@@ -16,7 +17,7 @@ export const useGetData = (url = "", pageSize = 10, current = 1) => {
 
   const fetchingData = useCallback(() => {
     const query =
-      `/api/${url}?` +
+     buildApiUrl (`/api/${url}?`) +
       new URLSearchParams({
         limit: pageSize,
         skip: (current - 1) * pageSize,
@@ -27,6 +28,7 @@ export const useGetData = (url = "", pageSize = 10, current = 1) => {
 
     fetch(query, {
       headers: { Accept: "application/json" },
+      credentials: "include",
     })
 
       .then((response) => {

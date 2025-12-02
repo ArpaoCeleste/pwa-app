@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { buildApiUrl } from "../../../config";
 
 export const useAuth = () => {
     const [isValidLogin, setValidLogin] = useState(false);
@@ -6,8 +7,10 @@ export const useAuth = () => {
 
     const hasLogin = () => {
         setFeching(true);
-        fetch('/api/auth/me', {
-            headers: { 'Accept': 'application/json' }
+        fetch(buildApiUrl('/api/auth/me'), {
+            headers: { 'Accept': 'application/json',
+             credentials: 'include',
+             }
         })
         .then((response) => response.json())
         .then((response) => {

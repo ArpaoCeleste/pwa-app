@@ -1,5 +1,5 @@
 const config = {
-    db: 'mongodb://localhost:27017/stadium',
+    db: 'mongodb+srv://Sapo:1234@nerpa.wzmhcpm.mongodb.net/stadium',
     secret: 'a-string-secret-at-least-256-bits-long',
     expiresPassword: 86400, // expires in 24hours
     saltRounds: 10

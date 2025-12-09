@@ -1,12 +1,12 @@
 const express = require("express");
+const http = require("http"); // Necessário para criar o servidor HTTP e Socket.IO
 const mongoose = require("mongoose");
 const path = require("path");
+const socketIo = require("socket.io"); // Necessário para Socket.IO
 const cors = require("cors");
 const config = require("./config");
-const http = require("http"); // Mantido para referência, mas não usado diretamente para servir o Vercel
-const socketIo = require("socket.io"); // Mantido para referência, mas não usado diretamente para servir o Vercel
-
-const port = process.env.PORT || 5000;
+// A variável port DEVE ser lida do ambiente Render, se não for 5000
+const port = process.env.PORT || 5000; 
 const hostname = ("RENDER" in process.env) ? "0.0.0.0" : "localhost"; 
 
 // Importa a função init do Router, que devolve a instância Express.Router
@@ -25,7 +25,7 @@ const customFrontendUrl = process.env.FRONTEND_URL || '';
 const allowedOrigins = [
   customFrontendUrl,
   'https://pwa-app-sigma-lovat.vercel.app/',
-  'https://pwa-app-lbb8.onrender.com/' // Adicionado o seu URL do Render
+  'https://pwa-app-lbb8.onrender.com/' 
 ].filter(Boolean);
 
 const isAllowedOrigin = (origin) =>
@@ -33,9 +33,9 @@ const isAllowedOrigin = (origin) =>
 
 const corsOptions = {
   origin(origin, callback) {
-    if (isAllowedOrigin(origin)) {
-      return callback(null, true); 
-    }
+    if (isAllowedOrigin(origin)) {
+      return callback(null, true); 
+    }
     return callback(new Error('Not allowed by CORS')); 
 },
   credentials: true, 
@@ -43,32 +43,47 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json()); // Permite ler body em formato JSON
-app.use(express.urlencoded({ extended: true })); // Permite ler dados de formulário
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
 
-// --- 2. Montagem de Rotas ---
+// --- 2. Inicialização do Servidor HTTP e Socket.IO ---
+
+// Cria o servidor HTTP que será usado pelo Express e Socket.IO
+const server = http.createServer(app); 
+
+// Inicializa o Socket.IO no servidor HTTP criado
+const io = socketIo(server, {
+    cors: corsOptions // Garante que o Socket.IO respeita as regras CORS
+});
+
+// --- 3. Montagem de Rotas ---
 
 // Monta todas as rotas da API em '/api'
-// 🛑 Chamamos o init() sem 'io' para garantir que o Serverless App não falhe
-// se o Socket.IO não estiver totalmente configurado para o Vercel.
-app.use('/api', mainRouterInit()); 
+// 🛑 Passamos a instância 'io' para o router, onde for necessário
+app.use('/api', mainRouterInit(io)); 
 
-// --- 3. Serviço de Ficheiros Estáticos e Fallback (CRÍTICO para o 404) ---
+// --- 4. Serviço de Ficheiros Estáticos e Fallback (CRÍTICO para o 404) ---
 
-// Serve ficheiros estáticos a partir da pasta 'dist' (substitua por 'build' se for o caso)
-// Assumimos que o frontend compilado está na pasta 'dist' na raiz do seu projeto Vercel.
+// Serve ficheiros estáticos a partir da pasta 'dist' (Substitua se necessário)
 app.use(express.static(path.join(__dirname, '..', 'dist'))); 
 
-// Para todas as outras rotas (ex: /about, /home), devolve o index.html (SPA routing)
+// Para todas as outras rotas (SPA routing)
 app.get('*', (req, res) => {
-    // Apenas devolve o index.html se não for uma rota da API
     if (req.originalUrl.startsWith('/api/')) {
-        // Se for um pedido API e chegou aqui, é 404 na API, não no frontend.
         return res.status(404).json({ error: 'API route not found' });
     }
     res.sendFile(path.join(__dirname, '..', 'dist', 'index.html')); 
 });
 
 
-// 🛑 PONTO CRÍTICO: Exporta a aplicação Express para o Vercel.
-module.exports = app;
+// 🛑 PONTO CRÍTICO: INICIAR O SERVIDOR NO RENDER
+// O Render exige que você chame server.listen() para detetar a porta.
+
+server.listen(port, hostname, () => {
+    console.log(`Servidor Express/Socket.IO a ouvir em http://${hostname}:${port}`);
+});
+
+
+// Removemos o module.exports = app; pois o servidor está a ser iniciado com server.listen()
+// Caso precise de usar esta função num ambiente Serverless (como Vercel), terá de voltar a exportar 'app' 
+// e remover 'server.listen'.

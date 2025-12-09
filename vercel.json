@@ -6,18 +6,18 @@
       "use": "@vercel/static-build",
       "config": {
         "installCommand": "npm install",
-        "buildCommand": "npm start",
+        "buildCommand": "npm run build",
         "outputDirectory": "dist"
       }
     }
   ],
   "routes": [
-    
+   
     {
       "src": "/api/(.*)",
       "dest": "https://pwa-app-lbb8.onrender.com/api/$1"
     },
-  
+    
     {
       "src": "/(.*)",
       "dest": "frontend/dist/$1"
